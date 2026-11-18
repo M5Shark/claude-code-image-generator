@@ -14,6 +14,39 @@ No OpenAI API key needed.
 Every image is saved to disk at full size, and Claude gets the file path plus a
 small preview so it can see the result and refine it.
 
+## Examples
+
+All made from Claude Code with a ChatGPT Plus account. Each took 25–45 seconds.
+
+<table>
+<tr>
+<td width="50%" valign="top">
+<img src="docs/examples/1-generate.jpg" alt="Cartoon shark wearing headphones, flat vector style, teal and navy">
+<br><b><code>generate_image</code></b>
+<br><sub>"a cute cartoon shark wearing headphones, flat vector style, teal and navy, white background"</sub>
+</td>
+<td width="50%" valign="top">
+<img src="docs/examples/2-edit.jpg" alt="The same shark recolored purple with small golden stars around it">
+<br><b><code>edit_image</code></b> with the image on the left as input
+<br><sub>"make the shark purple and add small golden stars around it, keep the same style"</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<img src="docs/examples/3-transparent-sticker.jpg" alt="Shark DJ sticker with sunglasses and turntables on a transparent background">
+<br><b><code>generate_image</code></b> with <code>background: "transparent"</code>
+<br><sub>"a die-cut sticker of a cool cartoon shark DJ wearing sunglasses and headphones, bold outlines, vibrant purple and teal"</sub>
+</td>
+<td width="50%" valign="top">
+<img src="docs/examples/4-transparent-logo.jpg" alt="M5SHARK army-style badge logo with a helmeted shark on camo, transparent background">
+<br><b><code>generate_image</code></b> with <code>background: "transparent"</code>
+<br><sub>"M5SHARK logo in a military army style: a shark in a combat helmet on a camo badge, stencil lettering"</sub>
+</td>
+</tr>
+</table>
+
+<sub>The checkerboard shows where the background is transparent. Previews are scaled down; real outputs are 1254×1254 to 1536×1024.</sub>
+
 ## How it works
 
 ```
