@@ -62,6 +62,14 @@ async def call(env: dict, name: str, args: dict):
             return await s.call_tool(name, args)
 
 
+async def list_tools(env: dict):
+    params = StdioServerParameters(command="uv", args=["run", "--script", str(SERVER)], env=env)
+    async with stdio_client(params) as (read, write):
+        async with ClientSession(read, write) as s:
+            await s.initialize()
+            return (await s.list_tools()).tools
+
+
 class MockOpenAI(BaseHTTPRequestHandler):
     requests: list[str] = []
 
@@ -116,6 +124,17 @@ async def main() -> None:
 
     def last_codex_call() -> dict:
         return json.loads(log.read_text().splitlines()[-1])
+
+    print("Tool annotations")
+    tools = {t.name: t for t in await list_tools(env)}
+    check(set(tools) == {"generate_image", "edit_image"}, "both tools listed")
+    for name, tool in tools.items():
+        a = tool.annotations
+        check(
+            a is not None and a.title
+            and (a.readOnlyHint, a.destructiveHint, a.idempotentHint, a.openWorldHint) == (False, False, False, True),
+            f"{name} declares all four hints",
+        )
 
     print("ChatGPT backend (fake codex)")
     r = await call(env, "generate_image", {"prompt": "A shark logo", "size": "1536x1024", "quality": "high"})
