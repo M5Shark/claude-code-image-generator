@@ -39,6 +39,7 @@ from typing import Annotated, Literal
 
 import httpx
 from mcp.server.fastmcp import FastMCP, Image
+from mcp.types import ToolAnnotations
 from PIL import Image as PILImage
 from pydantic import Field
 
@@ -557,8 +558,12 @@ def _source(model: str | None) -> str:
 
 # ---------------------------------------------------------------- tools
 
+# Both tools write new files (never overwrite: see _unique), give a different result on every
+# call, and send the prompt to ChatGPT or the OpenAI API.
+IMAGE_TOOL_HINTS = dict(readOnlyHint=False, destructiveHint=False, idempotentHint=False, openWorldHint=True)
 
-@mcp.tool()
+
+@mcp.tool(annotations=ToolAnnotations(title="Generate image", **IMAGE_TOOL_HINTS))
 async def generate_image(
     prompt: Annotated[str, Field(description="Detailed description of the image to create.")],
     size: Size = "auto",
@@ -586,7 +591,7 @@ async def generate_image(
     )  # fmt: skip
 
 
-@mcp.tool()
+@mcp.tool(annotations=ToolAnnotations(title="Edit image", **IMAGE_TOOL_HINTS))
 async def edit_image(
     prompt: Annotated[
         str, Field(description="What to change, or how to combine the input images into a new one.")
